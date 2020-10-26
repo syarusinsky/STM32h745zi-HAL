@@ -3,6 +3,16 @@
 
 #include <stdint.h>
 
+enum class RCC_CLOCK_SOURCE
+{
+	INTERNAL,
+	EXTERNAL
+};
+
+enum class RCC_PLL_MULTIPLY
+{
+};
+
 enum class GPIO_PORT
 {
 	A,
@@ -70,6 +80,17 @@ class LLPD
 		static bool gpio_input_get (const GPIO_PORT& port, const GPIO_PIN& pin);
 		static void gpio_output_set (const GPIO_PORT& port, const GPIO_PIN& pin, bool set);
 		static void gpio_test();
+
+		// TIM6
+		static void tim6_counter_setup (uint32_t prescalerDivisor, uint32_t cyclesPerInterrupt, uint32_t interruptRate);
+		static void tim6_counter_enable_interrupts();
+		static void tim6_counter_disable_interrupts();
+		static void tim6_counter_start();
+		static void tim6_counter_stop();
+		static void tim6_counter_clear_interrupt_flag();
+		static void tim6_delay (uint32_t microseconds); // delay function may not be 100% accurate
+		static bool tim6_isr_handle_delay(); 	// To use delay functions, this function needs to be in the tim6 isr.
+							// It will return true if a delay is not finished, or false if it is.
 };
 
 #endif // LLPD_H
