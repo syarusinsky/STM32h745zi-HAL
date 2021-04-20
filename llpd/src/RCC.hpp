@@ -59,7 +59,13 @@ void LLPD::rcc_clock_start_max_cpu1()
 
 // setup power stuff
 	// enable LDO
-	PWR->CR3 |= PWR_CR3_LDOEN;
+	uint32_t supplyConfig = PWR->CR3;
+	supplyConfig |= PWR_CR3_LDOEN;
+	supplyConfig &= ~(PWR_CR3_SMPSEN);
+	PWR->CR3 = supplyConfig;
+
+	// wait for voltage level to stabilize
+	while ( ! (PWR->CSR1 & PWR_CSR1_ACTVOSRDY) ) {}
 
 	// set voltage scaling to scale 1 first
 	PWR->D3CR |= PWR_D3CR_VOS;
