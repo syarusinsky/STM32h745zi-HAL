@@ -130,6 +130,41 @@ enum class I2C_ADDR_MODE
 	BITS_7
 };
 
+enum class USART_NUM
+{
+	USART_1,
+	USART_2,
+	USART_3,
+	USART_6
+};
+
+enum class USART_WORD_LENGTH
+{
+	BITS_7,
+	BITS_8,
+	BITS_9
+};
+
+enum class USART_PARITY
+{
+	ODD,
+	EVEN,
+	NONE
+};
+
+enum class USART_CONF
+{
+	TX_ONLY,
+	RX_ONLY,  // Recieve interrupt will be enabled
+	TX_AND_RX // Recieve interrupt will be enabled
+};
+
+enum class USART_STOP_BITS
+{
+	BITS_1,
+	BITS_2
+};
+
 class LLPD
 {
 	public:
@@ -177,6 +212,19 @@ class LLPD
 		static void i2c_master_write (const I2C_NUM& i2cNum, bool setStopCondition, uint8_t numBytes, uint8_t bytes...) {}
 		static void i2c_master_read (const I2C_NUM& i2cNum, bool setStopCondition, uint8_t numBytes, uint8_t* bytes...) {}
 		static void i2c_master_read_into_array (const I2C_NUM& i2cNum, bool setStopCondition, uint8_t numBytes, uint8_t* arr) {}
+
+		// USART usart1( tx = b6,  rx = b7  )
+		//       usart2( tx = d5,  rx = d6  )
+		//       usart3( tx = c10, rx = c11 )
+		//       usart6( tx = g14, rx = g9  )
+		static void usart_init (const USART_NUM& usartNum, const USART_WORD_LENGTH& wordLen, const USART_PARITY& parity,
+					const USART_CONF& conf, const USART_STOP_BITS& stopBits, const unsigned int periphClockFreq,
+					const unsigned int baudRate);
+		static void usart_transmit (const USART_NUM& usartNum, uint16_t data);
+		static uint16_t usart_receive (const USART_NUM& usartNum);
+		static void usart_log (const USART_NUM& usartNum, const char* cStr); // needs to be proper c string with terminator
+		static void usart_log_int (const USART_NUM& usartNum, const char* cStr, int val);
+		static void usart_log_float (const USART_NUM& usartNum, const char* cStr, float val);
 };
 
 #endif // LLPD_H
