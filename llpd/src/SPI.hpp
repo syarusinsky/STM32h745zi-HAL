@@ -1,7 +1,5 @@
 #include "LLPD.hpp"
 
-#include "stm32h745xx.h"
-
 static void setup_spi_registers (SPI_TypeDef* spiPtr, const SPI_BAUD_RATE& baudRate, const SPI_CLK_POL& pol,
 				const SPI_CLK_PHASE& phase, const SPI_DUPLEX& duplex, const SPI_FRAME_FORMAT& frameFormat,
 				const SPI_DATA_SIZE& dataSize)
@@ -232,29 +230,6 @@ static void setup_spi_registers (SPI_TypeDef* spiPtr, const SPI_BAUD_RATE& baudR
 
 		// lastly, enable SPI peripheral
 		spiPtr->CR1 |= SPI_CR1_SPE;
-	}
-}
-
-static void setup_alt_func_pin (GPIO_TypeDef* gpioPtr, int pinNum, const int afValue)
-{
-	if ( pinNum <= 7 )
-	{
-		// clear alternate function register for pin
-		gpioPtr->AFR[0] &= ~(0b1111 << (pinNum * 4)); // 4 is the width of the alternate function pin value
-
-		// set to alternate function num
-		gpioPtr->AFR[0] |= (afValue << (pinNum * 4));
-	}
-	else
-	{
-		// we have to subtract 8 since we're modifying the high register
-		pinNum -= 8;
-
-		// clear alternate function register for pin
-		gpioPtr->AFR[1] &= ~(0b1111 << (pinNum * 4));
-
-		// set to alternate function num
-		gpioPtr->AFR[1] |= (afValue << (pinNum * 4));
 	}
 }
 

@@ -1,7 +1,5 @@
 #include "LLPD.hpp"
 
-#include "stm32h745xx.h"
-
 #include <limits>
 
 static volatile float    tim6DelayVal = std::numeric_limits<float>::max(); // value for delay functions

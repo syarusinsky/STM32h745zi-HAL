@@ -3,6 +3,8 @@
 
 #include <stdint.h>
 
+#include "stm32h745xx.h"
+
 enum class GPIO_PORT
 {
 	A,
@@ -225,6 +227,9 @@ class LLPD
 		static void usart_log (const USART_NUM& usartNum, const char* cStr); // needs to be proper c string with terminator
 		static void usart_log_int (const USART_NUM& usartNum, const char* cStr, int val);
 		static void usart_log_float (const USART_NUM& usartNum, const char* cStr, float val);
+
+	private:
+		static inline void setup_alt_func_pin (GPIO_TypeDef* gpioPtr, int pinNum, const int afValue);
 };
 
 #endif // LLPD_H

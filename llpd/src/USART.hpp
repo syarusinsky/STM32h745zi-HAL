@@ -2,8 +2,6 @@
 
 #include <stdlib.h>
 
-#include "stm32h745xx.h"
-
 static uint16_t usart1WordLenMask = 0b0000000011111111;
 static uint16_t usart2WordLenMask = 0b0000000011111111;
 static uint16_t usart3WordLenMask = 0b0000000011111111;
@@ -25,11 +23,8 @@ void LLPD::usart_init (const USART_NUM& usartNum, const USART_WORD_LENGTH& wordL
 		usartWordLenMask = &usart1WordLenMask;
 
 		// set alternate function registers to af7 for b6 and b7
-		const int afValue = 7;
-		const int afWidth = 4;
-		const int afPin6 = 6;
-		const int afPin7 = 7;
-		GPIOB->AFR[0] |= (afValue << (afPin6 * afWidth)) | (afValue << (afPin7 * afWidth));
+		setup_alt_func_pin( GPIOB, 6, 7 );
+		setup_alt_func_pin( GPIOB, 7, 7 );
 
 		// tx
 		gpio_output_setup( GPIO_PORT::B, GPIO_PIN::PIN_6, GPIO_PUPD::PULL_DOWN, GPIO_OUTPUT_TYPE::PUSH_PULL,
@@ -49,11 +44,8 @@ void LLPD::usart_init (const USART_NUM& usartNum, const USART_WORD_LENGTH& wordL
 		usartWordLenMask = &usart2WordLenMask;
 
 		// set alternate function registers to af7 for d5 and d6
-		const int afValue = 7;
-		const int afWidth = 4;
-		const int afPin5 = 5;
-		const int afPin6 = 6;
-		GPIOD->AFR[0] |= (afValue << (afPin5 * afWidth)) | (afValue << (afPin6 * afWidth));
+		setup_alt_func_pin( GPIOD, 5, 7 );
+		setup_alt_func_pin( GPIOD, 6, 7 );
 
 		// tx
 		gpio_output_setup( GPIO_PORT::D, GPIO_PIN::PIN_5, GPIO_PUPD::PULL_DOWN, GPIO_OUTPUT_TYPE::PUSH_PULL,
@@ -73,11 +65,8 @@ void LLPD::usart_init (const USART_NUM& usartNum, const USART_WORD_LENGTH& wordL
 		usartWordLenMask = &usart3WordLenMask;
 
 		// set alternate function registers to af7 for c10 and c11
-		const int afValue = 7;
-		const int afWidth = 4;
-		const int afPin10 = 10 - 8; // minus 8 since we will modify the high register instead of low
-		const int afPin11 = 11 - 8;
-		GPIOC->AFR[1] |= (afValue << (afPin10 * afWidth)) | (afValue << (afPin11 * afWidth));
+		setup_alt_func_pin( GPIOC, 10, 7 );
+		setup_alt_func_pin( GPIOC, 11, 7 );
 
 		// tx
 		gpio_output_setup( GPIO_PORT::C, GPIO_PIN::PIN_10, GPIO_PUPD::PULL_DOWN, GPIO_OUTPUT_TYPE::PUSH_PULL,
@@ -97,11 +86,8 @@ void LLPD::usart_init (const USART_NUM& usartNum, const USART_WORD_LENGTH& wordL
 		usartWordLenMask = &usart6WordLenMask;
 
 		// set alternate function registers to af7 for g14 and g9
-		const int afValue = 7;
-		const int afWidth = 4;
-		const int afPin14 = 14 - 8; // minus 8 since we will modify the high register instead of low
-		const int afPin9  = 9  - 8;
-		GPIOG->AFR[1] |= (afValue << (afPin14 * afWidth)) | (afValue << (afPin9 * afWidth));
+		setup_alt_func_pin( GPIOG, 14, 7 );
+		setup_alt_func_pin( GPIOG, 9,  7 );
 
 		// tx
 		gpio_output_setup( GPIO_PORT::G, GPIO_PIN::PIN_14, GPIO_PUPD::PULL_DOWN, GPIO_OUTPUT_TYPE::PUSH_PULL,

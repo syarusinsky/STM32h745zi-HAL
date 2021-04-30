@@ -1,7 +1,5 @@
 #include "LLPD.hpp"
 
-#include "stm32h745xx.h"
-
 static inline GPIO_TypeDef* PortToPortPtr (const GPIO_PORT& port)
 {
 	switch ( port )

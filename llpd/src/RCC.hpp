@@ -1,7 +1,5 @@
 #include "LLPD.hpp"
 
-#include "stm32h745xx.h"
-
 static void ensureCorrectFlashLatency (unsigned int freq)
 {
 	uint32_t intendedLatency = 0;
