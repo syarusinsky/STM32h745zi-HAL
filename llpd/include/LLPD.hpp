@@ -203,6 +203,7 @@ class LLPD
 		//     spi4( sck = e12, miso = e13, mosi = e14 )
 		//     spi5( sck =  f7, miso =  f8, mosi =  f9 )
 		//     spi6( sck = g13, miso = g12, mosi = g14 )
+		// each spi uses its reset clock
 		static void spi_master_init (const SPI_NUM& spiNum, const SPI_BAUD_RATE& baudRate, const SPI_CLK_POL& pol,
 						const SPI_CLK_PHASE& phase, const SPI_DUPLEX& duplex,
 						const SPI_FRAME_FORMAT& frameFormat, const SPI_DATA_SIZE& dataSize);

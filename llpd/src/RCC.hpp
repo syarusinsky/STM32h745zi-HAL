@@ -107,6 +107,10 @@ void LLPD::rcc_clock_start_max_cpu1()
 	RCC->PLL1DIVR &= ~(RCC_PLL1DIVR_P1);
 	RCC->PLL1DIVR |= (1 << RCC_PLL1DIVR_P1_Pos);
 
+	// set pll 1 divq prescaler value
+	RCC->PLL1DIVR &= ~(RCC_PLL1DIVR_Q1);
+	RCC->PLL1DIVR |= ( (8 - 1) << RCC_PLL1DIVR_Q1_Pos );
+
 	// set pll multiply
 	RCC->PLL1DIVR &= ~(RCC_PLL1DIVR_N1);
 	RCC->PLL1DIVR |= ( (60 - 1) << RCC_PLL1DIVR_N1_Pos );
