@@ -121,15 +121,18 @@ enum class SPI_DATA_SIZE
 	BITS_16
 };
 
-// TODO finish the i2c implementation
 enum class I2C_NUM
 {
-	I2C_1
+	I2C_1,
+	I2C_2,
+	I2C_3,
+	I2C_4
 };
 
 enum class I2C_ADDR_MODE
 {
-	BITS_7
+	BITS_7,
+	BITS_10
 };
 
 enum class USART_NUM
@@ -203,18 +206,22 @@ class LLPD
 		//     spi4( sck = e12, miso = e13, mosi = e14 )
 		//     spi5( sck =  f7, miso =  f8, mosi =  f9 )
 		//     spi6( sck = g13, miso = g12, mosi = g14 )
-		// each spi uses its reset clock
+		// each spi uses its reset clock source
 		static void spi_master_init (const SPI_NUM& spiNum, const SPI_BAUD_RATE& baudRate, const SPI_CLK_POL& pol,
 						const SPI_CLK_PHASE& phase, const SPI_DUPLEX& duplex,
 						const SPI_FRAME_FORMAT& frameFormat, const SPI_DATA_SIZE& dataSize);
 		static uint16_t spi_master_send_and_recieve (const SPI_NUM& spiNum, uint8_t data);
 
-		// I2C TODO just stubs for now so this stuff compiles
+		// I2C i2c1( sda = b7,  scl = b6  )
+		//     i2c2( sda = b11, scl = b10 )
+		//     i2c3( sda = c9,  scl = a8  )
+		//     i2c4( sda = f15, scl = f14 )
+		// each i2c uses its reset clock source
 		static void i2c_master_setup (const I2C_NUM& i2cNum, uint32_t timingRegVal);
-		static void i2c_master_set_slave_address (const I2C_NUM& i2cNum, const I2C_ADDR_MODE& addrMode, uint16_t address) {}
-		static void i2c_master_write (const I2C_NUM& i2cNum, bool setStopCondition, uint8_t numBytes, uint8_t bytes...) {}
-		static void i2c_master_read (const I2C_NUM& i2cNum, bool setStopCondition, uint8_t numBytes, uint8_t* bytes...) {}
-		static void i2c_master_read_into_array (const I2C_NUM& i2cNum, bool setStopCondition, uint8_t numBytes, uint8_t* arr) {}
+		static void i2c_master_set_slave_address (const I2C_NUM& i2cNum, const I2C_ADDR_MODE& addrMode, uint16_t address);
+		static void i2c_master_write (const I2C_NUM& i2cNum, bool setStopCondition, uint8_t numBytes, uint8_t bytes...);
+		static void i2c_master_read (const I2C_NUM& i2cNum, bool setStopCondition, uint8_t numBytes, uint8_t* bytes...);
+		static void i2c_master_read_into_array (const I2C_NUM& i2cNum, bool setStopCondition, uint8_t numBytes, uint8_t* arr);
 
 		// USART usart1( tx = b6,  rx = b7  )
 		//       usart2( tx = d5,  rx = d6  )

@@ -347,23 +347,25 @@ void LLPD::spi_master_init (const SPI_NUM& spiNum, const SPI_BAUD_RATE& baudRate
 		mosiPin = GPIO_PIN::PIN_14;
 	}
 
-	setup_alt_func_pin( gpioPtr, afPinSk, afValue );
-	setup_alt_func_pin( gpioPtr, afPinMi, afValue );
-	setup_alt_func_pin( gpioPtr, afPinMo, afValue );
+	// set alternate function registers for gpio
+	LLPD::setup_alt_func_pin( gpioPtr, afPinSk, afValue );
+	LLPD::setup_alt_func_pin( gpioPtr, afPinMi, afValue );
+	LLPD::setup_alt_func_pin( gpioPtr, afPinMo, afValue );
 
 	// spi sck
-	gpio_output_setup( gpioPort, sckPin, GPIO_PUPD::PULL_DOWN, GPIO_OUTPUT_TYPE::PUSH_PULL,
-				GPIO_OUTPUT_SPEED::HIGH, true );
+	LLPD::gpio_output_setup( gpioPort, sckPin, GPIO_PUPD::PULL_DOWN, GPIO_OUTPUT_TYPE::PUSH_PULL,
+					GPIO_OUTPUT_SPEED::HIGH, true );
 
 	// spi miso
-	gpio_digital_input_setup( gpioPort, misoPin, GPIO_PUPD::PULL_UP, true );
+	LLPD::gpio_output_setup( gpioPort, misoPin, GPIO_PUPD::NONE, GPIO_OUTPUT_TYPE::PUSH_PULL,
+					GPIO_OUTPUT_SPEED::HIGH, true );
 
 	// spi1 mosi
-	gpio_output_setup( gpioPort, mosiPin, GPIO_PUPD::PULL_DOWN, GPIO_OUTPUT_TYPE::PUSH_PULL,
-				GPIO_OUTPUT_SPEED::HIGH, true );
+	LLPD::gpio_output_setup( gpioPort, mosiPin, GPIO_PUPD::NONE, GPIO_OUTPUT_TYPE::PUSH_PULL,
+					GPIO_OUTPUT_SPEED::HIGH, true );
 
 	// set sck low
-	gpio_output_set( gpioPort, sckPin, false );
+	LLPD::gpio_output_set( gpioPort, sckPin, false );
 
 	setup_spi_registers( spiPtr, baudRate, pol, phase, duplex, frameFormat, dataSize );
 }
