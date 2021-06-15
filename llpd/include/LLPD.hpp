@@ -58,6 +58,49 @@ enum class GPIO_PUPD
 	PULL_DOWN
 };
 
+enum class ADC_NUM
+{
+	ADC_1_2,
+	ADC_3
+};
+
+enum class ADC_CYCLES_PER_SAMPLE
+{
+	CPS_1p5, 	// 1.5
+	CPS_2p5, 	// 2.5
+	CPS_8p5, 	// 8.5
+	CPS_16p5, 	// 16.5
+	CPS_32p5, 	// 32.5
+	CPS_64p5, 	// 64.5
+	CPS_387p5, 	// 387.5
+	CPS_810p5, 	// 810.5
+};
+
+enum class ADC_CHANNEL
+{
+	CHAN_0,
+	CHAN_1,
+	CHAN_2,
+	CHAN_3,
+	CHAN_4,
+	CHAN_5,
+	CHAN_6,
+	CHAN_7,
+	CHAN_8,
+	CHAN_9,
+	CHAN_10,
+	CHAN_11,
+	CHAN_12,
+	CHAN_13,
+	CHAN_14,
+	CHAN_15,
+	CHAN_16,
+	CHAN_17,
+	CHAN_18,
+	CHAN_19,
+	CHAN_INVALID
+};
+
 enum class SPI_NUM
 {
 	SPI_1,
@@ -188,6 +231,15 @@ class LLPD
 		static bool gpio_input_get (const GPIO_PORT& port, const GPIO_PIN& pin);
 		static void gpio_output_set (const GPIO_PORT& port, const GPIO_PIN& pin, bool set);
 		static void gpio_test();
+
+		// ADC
+		// initialization needs to take place after counter is started for tim6, since it uses delay function
+		// adc12 uses adc1 channels
+		// TODO we really need to specify cyclesPerSample separately for fast and slow channels...
+		static void adc_init (const ADC_NUM& adcNum, const ADC_CYCLES_PER_SAMPLE& cyclesPerSample);
+		static void adc_set_channel_order (const ADC_NUM& adcNum, uint8_t numChannels, const ADC_CHANNEL& channel...);
+		static void adc_perform_conversion_sequence (const ADC_NUM& adcNum);
+		static uint16_t adc_get_channel_value (const ADC_NUM& adcNum, const ADC_CHANNEL& adcChannel);
 
 		// TIM6
 		static void tim6_counter_setup (uint32_t prescalerDivisor, uint32_t cyclesPerInterrupt, uint32_t interruptRate);

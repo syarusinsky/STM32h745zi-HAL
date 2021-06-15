@@ -25,6 +25,7 @@ void LLPD::setup_alt_func_pin (GPIO_TypeDef* gpioPtr, int pinNum, const int afVa
 
 #include "GPIO.hpp"
 #include "RCC.hpp"
+#include "ADC.hpp"
 #include "Timers.hpp"
 #include "SPI.hpp"
 #include "I2C.hpp"
