@@ -247,6 +247,10 @@ class LLPD
 		static void adc_perform_conversion_sequence (const ADC_NUM& adcNum);
 		static uint16_t adc_get_channel_value (const ADC_NUM& adcNum, const ADC_CHANNEL& adcChannel);
 
+		// DAC dac1( vout1 = a4, vout2 = a5 )
+		static void dac_init (bool useVoltageBuffer);
+		static void dac_send (uint16_t ch1Data, uint16_t ch2Data);
+
 		// TIM6
 		static void tim6_counter_setup (uint32_t prescalerDivisor, uint32_t cyclesPerInterrupt, uint32_t interruptRate);
 		static void tim6_counter_enable_interrupts();
