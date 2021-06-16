@@ -30,3 +30,4 @@ void LLPD::setup_alt_func_pin (GPIO_TypeDef* gpioPtr, int pinNum, const int afVa
 #include "SPI.hpp"
 #include "I2C.hpp"
 #include "USART.hpp"
+#include "OpAmp.hpp"

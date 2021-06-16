@@ -213,6 +213,12 @@ enum class USART_STOP_BITS
 	BITS_2
 };
 
+enum class OPAMP_NUM
+{
+	OPAMP_1,
+	OPAMP_2
+};
+
 class LLPD
 {
 	public:
@@ -287,6 +293,10 @@ class LLPD
 		static void usart_log (const USART_NUM& usartNum, const char* cStr); // needs to be proper c string with terminator
 		static void usart_log_int (const USART_NUM& usartNum, const char* cStr, int val);
 		static void usart_log_float (const USART_NUM& usartNum, const char* cStr, float val);
+
+		// Op Amp opamp1( v+ = b0, v- = c5, vout = c4 )
+		//        opamp2( v+ = e9, v- = e8, vout = e7 )
+		static void opamp_init (const OPAMP_NUM& opAmpNum);
 
 	private:
 		static inline void setup_alt_func_pin (GPIO_TypeDef* gpioPtr, int pinNum, const int afValue);
