@@ -425,6 +425,18 @@ void LLPD::adc_init (const ADC_NUM& adcNum, const ADC_CYCLES_PER_SAMPLE& cyclesP
 				( clkRegVal << (spacing * (18 - offset)) ) |
 				( clkRegVal << (spacing * (19 - offset)) );
 	}
+
+	// set to 12-bits
+	if ( adcNum == ADC_NUM::ADC_1_2 )
+	{
+		ADC1->CFGR &= ~(ADC_CFGR_RES);
+		ADC1->CFGR |= ( ADC_CFGR_RES_2 | ADC_CFGR_RES_1 );
+	}
+	else // ADC_NUM::ADC_3
+	{
+		ADC3->CFGR &= ~(ADC_CFGR_RES);
+		ADC3->CFGR |= ( ADC_CFGR_RES_2 | ADC_CFGR_RES_1 );
+	}
 }
 
 void LLPD::adc_set_channel_order (const ADC_NUM& adcNum, uint8_t numChannels, const ADC_CHANNEL& channel...)
