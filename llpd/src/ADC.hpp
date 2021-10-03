@@ -4,14 +4,14 @@
 #include <string.h>
 
 // these arrays are used to hold the values of each channel after a conversion sequence
-static uint32_t* adc12ChannelValues = (uint32_t*) D2_AHBSRAM_BASE;
-static uint32_t* adc3ChannelValues = (uint32_t*) D3_SRAM_BASE;
+static uint32_t* adc12ChannelValues = (uint32_t*) ( ((uint8_t*) D3_SRAM_BASE) + D3_SRAM_TIM6_OFFSET_IN_BYTES );
+static uint32_t* adc3ChannelValues = adc12ChannelValues + 16;
 static uint8_t  adc12NumChansInSeq = 0;
 static uint8_t  adc3NumChansInSeq = 0;
 
 // these arrays are used to hold the mapping of the channel order to channel number
-static ADC_CHANNEL adc12ChannelOrder[16] = { ADC_CHANNEL::CHAN_INVALID };
-static ADC_CHANNEL adc3ChannelOrder[16] = { ADC_CHANNEL::CHAN_INVALID };
+static ADC_CHANNEL* adc12ChannelOrder = (ADC_CHANNEL*) ( adc3ChannelValues + 16 );
+static ADC_CHANNEL* adc3ChannelOrder = adc12ChannelOrder + 16;
 
 static uint8_t adcChannelToNum (const ADC_CHANNEL& channel)
 {

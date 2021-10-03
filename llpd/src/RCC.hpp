@@ -156,6 +156,10 @@ void LLPD::rcc_clock_start_max_cpu1()
 	// take the semaphore (spinlock to catch if not taken)
 	while ( HSEM->RLR[0] != (HSEM_CR_COREID_CURRENT | HSEM_RLR_LOCK) ) {}
 
+	// set the setupCompleteFlag to false
+	bool* volatile setupCompleteFlag = reinterpret_cast<bool*>( D2_AHBSRAM_BASE );
+	*setupCompleteFlag = false;
+
 	// release the semaphore to notifiy to CPU2 that everything is cool
 	HSEM->R[0] = ( 0 /*process id*/ | HSEM_CR_COREID_CURRENT );
 

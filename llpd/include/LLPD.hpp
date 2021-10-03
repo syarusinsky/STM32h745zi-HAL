@@ -219,6 +219,10 @@ enum class OPAMP_NUM
 	OPAMP_2
 };
 
+constexpr unsigned int D3_SRAM_TIM6_OFFSET_IN_BYTES = sizeof(float) * 3;
+constexpr unsigned int D3_SRAM_ADC_OFFSET_IN_BYTES = D3_SRAM_TIM6_OFFSET_IN_BYTES + ( sizeof(uint32_t) * 32 ) + ( sizeof(ADC_CHANNEL) * 32 );
+constexpr unsigned int D3_SRAM_UNUSED_OFFSET_IN_BYTES = D3_SRAM_TIM6_OFFSET_IN_BYTES + D3_SRAM_ADC_OFFSET_IN_BYTES;
+
 class LLPD
 {
 	public:
@@ -241,6 +245,8 @@ class LLPD
 		// ADC
 		// initialization needs to take place after counter is started for tim6, since it uses delay function
 		// adc12 uses adc1 channels
+		// adc values and order are stored on D3 sram, so if you plan on using that account for the sizeof(uint32_t) * 32
+		// plus sizeof(ADC_CHANNEL) * 32 bytes it takes up (offset value found above)
 		// TODO we really need to specify cyclesPerSample separately for fast and slow channels...
 		static void adc_init (const ADC_NUM& adcNum, const ADC_CYCLES_PER_SAMPLE& cyclesPerSample);
 		static void adc_set_channel_order (const ADC_NUM& adcNum, uint8_t numChannels, const ADC_CHANNEL& channel...);
@@ -252,6 +258,8 @@ class LLPD
 		static void dac_send (uint16_t ch1Data, uint16_t ch2Data);
 
 		// TIM6
+		// tim6 stores 3 internal variables for delay functions across cores in D3 sram, so if you plan on using that account
+		// for the sizeof(float) * 3 bytes it takes up (offset value found above)
 		static void tim6_counter_setup (uint32_t prescalerDivisor, uint32_t cyclesPerInterrupt, uint32_t interruptRate);
 		static void tim6_counter_enable_interrupts();
 		static void tim6_counter_disable_interrupts();
@@ -301,6 +309,10 @@ class LLPD
 		// Op Amp opamp1( v+ = b0, v- = c5, vout = c4 )
 		//        opamp2( v+ = e9, v- = e8, vout = e7 )
 		static void opamp_init (const OPAMP_NUM& opAmpNum);
+
+		// HSEM
+		static bool hsem_try_take (unsigned int semNum);
+		static void hsem_release (unsigned int semNum);
 
 	private:
 		static inline void setup_alt_func_pin (GPIO_TypeDef* gpioPtr, int pinNum, const int afValue);

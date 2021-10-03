@@ -85,18 +85,18 @@ void LLPD::usart_init (const USART_NUM& usartNum, const USART_WORD_LENGTH& wordL
 		usart = USART6;
 		usartWordLenMask = &usart6WordLenMask;
 
-		// set alternate function registers to af7 for g14 and g9
-		setup_alt_func_pin( GPIOG, 14, 7 );
-		setup_alt_func_pin( GPIOG, 9,  7 );
+		// set alternate function registers to af7 for c6 and c7
+		setup_alt_func_pin( GPIOC, 6, 7 );
+		setup_alt_func_pin( GPIOC, 7, 7 );
 
 		// tx
-		gpio_output_setup( GPIO_PORT::G, GPIO_PIN::PIN_14, GPIO_PUPD::PULL_DOWN, GPIO_OUTPUT_TYPE::PUSH_PULL,
+		gpio_output_setup( GPIO_PORT::C, GPIO_PIN::PIN_6, GPIO_PUPD::PULL_DOWN, GPIO_OUTPUT_TYPE::PUSH_PULL,
 					GPIO_OUTPUT_SPEED::HIGH, true );
-		gpio_output_set( GPIO_PORT::G, GPIO_PIN::PIN_14, false );
+		gpio_output_set( GPIO_PORT::C, GPIO_PIN::PIN_6, false );
 
 		// rx
-		gpio_digital_input_setup( GPIO_PORT::G, GPIO_PIN::PIN_9, GPIO_PUPD::NONE, true );
-		gpio_output_set( GPIO_PORT::G, GPIO_PIN::PIN_9, false );
+		gpio_digital_input_setup( GPIO_PORT::C, GPIO_PIN::PIN_7, GPIO_PUPD::NONE, true );
+		gpio_output_set( GPIO_PORT::C, GPIO_PIN::PIN_7, false );
 	}
 
 	if ( usart && usartWordLenMask )
