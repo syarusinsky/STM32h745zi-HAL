@@ -5,6 +5,10 @@ void LLPD::dac_init (bool useVoltageBuffer)
 	// enable clock to dac
 	RCC->APB1LENR |= RCC_APB1LENR_DAC12EN;
 
+	// reset dac
+	RCC->APB1LRSTR |= RCC_APB1LRSTR_DAC12RST;
+	RCC->APB1LRSTR &= ~(RCC_APB1LRSTR_DAC12RST);
+
 	// set pins a4 and a5 to analog mode
 	LLPD::gpio_analog_setup( GPIO_PORT::A, GPIO_PIN::PIN_4 );
 	LLPD::gpio_analog_setup( GPIO_PORT::A, GPIO_PIN::PIN_5 );
