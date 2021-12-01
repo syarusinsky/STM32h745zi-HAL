@@ -357,7 +357,7 @@ void LLPD::spi_master_init (const SPI_NUM& spiNum, const SPI_BAUD_RATE& baudRate
 					GPIO_OUTPUT_SPEED::HIGH, true );
 
 	// spi miso
-	LLPD::gpio_output_setup( gpioPort, misoPin, GPIO_PUPD::NONE, GPIO_OUTPUT_TYPE::PUSH_PULL,
+	LLPD::gpio_output_setup( gpioPort, misoPin, GPIO_PUPD::PULL_UP, GPIO_OUTPUT_TYPE::PUSH_PULL,
 					GPIO_OUTPUT_SPEED::HIGH, true );
 
 	// spi1 mosi
