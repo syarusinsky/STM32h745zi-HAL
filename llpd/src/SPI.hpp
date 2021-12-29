@@ -345,6 +345,8 @@ void LLPD::spi_master_init (const SPI_NUM& spiNum, const SPI_BAUD_RATE& baudRate
 		sckPin = GPIO_PIN::PIN_13;
 		misoPin = GPIO_PIN::PIN_12;
 		mosiPin = GPIO_PIN::PIN_14;
+
+		spiPtr = SPI6;
 	}
 
 	// set alternate function registers for gpio
@@ -414,4 +416,84 @@ uint16_t LLPD::spi_master_send_and_recieve (const SPI_NUM& spiNum, uint8_t data)
 	while ( !(spiPtr->SR & SPI_SR_RXP) ) {}
 
 	return spiPtr->RXDR;
+}
+
+void LLPD::spi_master_change_baud_rate (const SPI_NUM& spiNum, const SPI_BAUD_RATE& baudRate)
+{
+	SPI_TypeDef* spiPtr = nullptr;
+
+	if ( spiNum == SPI_NUM::SPI_1 )
+	{
+		spiPtr = SPI1;
+	}
+	else if ( spiNum == SPI_NUM::SPI_2 )
+	{
+		spiPtr = SPI2;
+	}
+	else if ( spiNum == SPI_NUM::SPI_3 )
+	{
+		spiPtr = SPI3;
+	}
+	else if ( spiNum == SPI_NUM::SPI_4 )
+	{
+		spiPtr = SPI4;
+	}
+	else if ( spiNum == SPI_NUM::SPI_5 )
+	{
+		spiPtr = SPI5;
+	}
+	else if ( spiNum == SPI_NUM::SPI_6 )
+	{
+		spiPtr = SPI6;
+	}
+
+	// set baud rate
+	if ( baudRate == SPI_BAUD_RATE::SYSCLK_DIV_BY_2 )
+	{
+		spiPtr->CFG1 &= ~(SPI_CFG1_MBR_0);
+		spiPtr->CFG1 &= ~(SPI_CFG1_MBR_1);
+		spiPtr->CFG1 &= ~(SPI_CFG1_MBR_2);
+	}
+	else if ( baudRate == SPI_BAUD_RATE::SYSCLK_DIV_BY_4 )
+	{
+		spiPtr->CFG1 |= SPI_CFG1_MBR_0;
+		spiPtr->CFG1 &= ~(SPI_CFG1_MBR_1);
+		spiPtr->CFG1 &= ~(SPI_CFG1_MBR_2);
+	}
+	else if ( baudRate == SPI_BAUD_RATE::SYSCLK_DIV_BY_8 )
+	{
+		spiPtr->CFG1 &= ~(SPI_CFG1_MBR_0);
+		spiPtr->CFG1 |= SPI_CFG1_MBR_1;
+		spiPtr->CFG1 &= ~(SPI_CFG1_MBR_2);
+	}
+	else if ( baudRate == SPI_BAUD_RATE::SYSCLK_DIV_BY_16 )
+	{
+		spiPtr->CFG1 |= SPI_CFG1_MBR_0;
+		spiPtr->CFG1 |= SPI_CFG1_MBR_1;
+		spiPtr->CFG1 &= ~(SPI_CFG1_MBR_2);
+	}
+	else if ( baudRate == SPI_BAUD_RATE::SYSCLK_DIV_BY_32 )
+	{
+		spiPtr->CFG1 &= ~(SPI_CFG1_MBR_0);
+		spiPtr->CFG1 &= ~(SPI_CFG1_MBR_1);
+		spiPtr->CFG1 |= SPI_CFG1_MBR_2;
+	}
+	else if ( baudRate == SPI_BAUD_RATE::SYSCLK_DIV_BY_64 )
+	{
+		spiPtr->CFG1 |= SPI_CFG1_MBR_0;
+		spiPtr->CFG1 &= ~(SPI_CFG1_MBR_1);
+		spiPtr->CFG1 |= SPI_CFG1_MBR_2;
+	}
+	else if ( baudRate == SPI_BAUD_RATE::SYSCLK_DIV_BY_128 )
+	{
+		spiPtr->CFG1 &= ~(SPI_CFG1_MBR_0);
+		spiPtr->CFG1 |= SPI_CFG1_MBR_1;
+		spiPtr->CFG1 |= SPI_CFG1_MBR_2;
+	}
+	else if ( baudRate == SPI_BAUD_RATE::SYSCLK_DIV_BY_256 )
+	{
+		spiPtr->CFG1 |= SPI_CFG1_MBR_0;
+		spiPtr->CFG1 |= SPI_CFG1_MBR_1;
+		spiPtr->CFG1 |= SPI_CFG1_MBR_2;
+	}
 }

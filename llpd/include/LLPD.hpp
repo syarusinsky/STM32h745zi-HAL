@@ -280,6 +280,7 @@ class LLPD
 		static void spi_master_init (const SPI_NUM& spiNum, const SPI_BAUD_RATE& baudRate, const SPI_CLK_POL& pol,
 						const SPI_CLK_PHASE& phase, const SPI_DUPLEX& duplex,
 						const SPI_FRAME_FORMAT& frameFormat, const SPI_DATA_SIZE& dataSize);
+		static void spi_master_change_baud_rate (const SPI_NUM& spiNum, const SPI_BAUD_RATE& baudRate);
 		static uint16_t spi_master_send_and_recieve (const SPI_NUM& spiNum, uint8_t data);
 
 		// I2C i2c1( sda = b7,  scl = b6  )
