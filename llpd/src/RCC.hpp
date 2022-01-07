@@ -46,7 +46,7 @@ static void ensureCorrectFlashLatency (unsigned int freq)
 	FLASH->ACR |= intendedSgDelay;
 }
 
-void LLPD::rcc_clock_start_max_cpu1()
+void LLPD::rcc_clock_start_max_cpu1 (const unsigned int pll1qPresc)
 {
 // initial stuff
 	// wait for d2ckrdy == reset in rcc to wait for cpu 2 to enter stop mode
@@ -109,7 +109,7 @@ void LLPD::rcc_clock_start_max_cpu1()
 
 	// set pll 1 divq prescaler value
 	RCC->PLL1DIVR &= ~(RCC_PLL1DIVR_Q1);
-	RCC->PLL1DIVR |= ( (8 - 1) << RCC_PLL1DIVR_Q1_Pos );
+	RCC->PLL1DIVR |= ( (pll1qPresc - 1) << RCC_PLL1DIVR_Q1_Pos );
 
 	// set pll multiply
 	RCC->PLL1DIVR &= ~(RCC_PLL1DIVR_N1);

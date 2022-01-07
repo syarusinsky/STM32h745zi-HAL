@@ -355,16 +355,16 @@ void LLPD::spi_master_init (const SPI_NUM& spiNum, const SPI_BAUD_RATE& baudRate
 	LLPD::setup_alt_func_pin( gpioPtr, afPinMo, afValue );
 
 	// spi sck
-	LLPD::gpio_output_setup( gpioPort, sckPin, GPIO_PUPD::PULL_DOWN, GPIO_OUTPUT_TYPE::PUSH_PULL,
-					GPIO_OUTPUT_SPEED::HIGH, true );
+	LLPD::gpio_output_setup( gpioPort, sckPin, GPIO_PUPD::PULL_UP, GPIO_OUTPUT_TYPE::PUSH_PULL,
+					GPIO_OUTPUT_SPEED::VERY_HIGH, true );
 
 	// spi miso
-	LLPD::gpio_output_setup( gpioPort, misoPin, GPIO_PUPD::PULL_UP, GPIO_OUTPUT_TYPE::PUSH_PULL,
-					GPIO_OUTPUT_SPEED::HIGH, true );
+	LLPD::gpio_output_setup( gpioPort, misoPin, GPIO_PUPD::PULL_UP, GPIO_OUTPUT_TYPE::OPEN_DRAIN,
+					GPIO_OUTPUT_SPEED::VERY_HIGH, true );
 
 	// spi1 mosi
-	LLPD::gpio_output_setup( gpioPort, mosiPin, GPIO_PUPD::NONE, GPIO_OUTPUT_TYPE::PUSH_PULL,
-					GPIO_OUTPUT_SPEED::HIGH, true );
+	LLPD::gpio_output_setup( gpioPort, mosiPin, GPIO_PUPD::PULL_UP, GPIO_OUTPUT_TYPE::PUSH_PULL,
+					GPIO_OUTPUT_SPEED::VERY_HIGH, true );
 
 	// set sck low
 	LLPD::gpio_output_set( gpioPort, sckPin, false );
