@@ -97,6 +97,9 @@ void LLPD::rcc_clock_start_max_cpu1 (const unsigned int pll1qPresc)
 	// enable pll divp1 output
 	RCC->PLLCFGR |= RCC_PLLCFGR_DIVP1EN;
 
+	// enable pll divq1 output
+	RCC->PLLCFGR |= RCC_PLLCFGR_DIVQ1EN;
+
 	// set pll input frequency range
 	RCC->PLLCFGR |= RCC_PLLCFGR_PLL1RGE;
 
@@ -208,4 +211,48 @@ void LLPD::rcc_clock_start_max_cpu2()
 
 	// clear the hardware semaphore flag
 	HSEM->C2ICR |= 0b1;
+}
+
+void LLPD::rcc_start_pll2 (const unsigned int pll2qPresc)
+{
+	// disable pll
+	RCC->CR &= ~(RCC_CR_PLL2ON);
+
+	// wait until pll is disabled
+	while ( RCC->CR & RCC_CR_PLL2RDY ) {}
+
+	// set prescaler for pll2
+	RCC->PLLCKSELR &= ~(RCC_PLLCKSELR_DIVM2);
+	RCC->PLLCKSELR |= RCC_PLLCKSELR_DIVM2_0;
+
+	// enable pll divq2 output
+	RCC->PLLCFGR |= RCC_PLLCFGR_DIVQ2EN;
+
+	// set pll input frequency range
+	RCC->PLLCFGR |= RCC_PLLCFGR_PLL2RGE;
+
+	// set pll output frequency range
+	RCC->PLLCFGR &= ~(RCC_PLLCFGR_PLL2VCOSEL);
+
+	// set pll2 divq prescaler value
+	RCC->PLL2DIVR &= ~(RCC_PLL2DIVR_Q2);
+	RCC->PLL2DIVR |= ( (pll2qPresc - 1) << RCC_PLL2DIVR_Q2_Pos );
+
+	// set pll multiply
+	RCC->PLL2DIVR &= ~(RCC_PLL2DIVR_N2);
+	RCC->PLL2DIVR |= ( (60 - 1) << RCC_PLL2DIVR_N2_Pos );
+
+	// disable pll fract
+	RCC->PLLCFGR &= ~(RCC_PLLCFGR_PLL2FRACEN);
+
+	// enable pll
+	RCC->CR |= RCC_CR_PLL2ON;
+
+	// wait until pll is ready
+	while ( ! (RCC_CR_PLL2RDY) ) {}
+
+	// TODO maybe move this somewhere else
+	// ensure SPI 4 and 5 use pll2 divq
+	RCC->D2CCIP1R &= ( RCC_D2CCIP1R_SPI45SEL );
+	RCC->D2CCIP1R |= RCC_D2CCIP1R_SPI45SEL_0;
 }

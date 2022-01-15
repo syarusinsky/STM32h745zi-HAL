@@ -447,6 +447,9 @@ void LLPD::spi_master_change_baud_rate (const SPI_NUM& spiNum, const SPI_BAUD_RA
 		spiPtr = SPI6;
 	}
 
+	// ensure spi is off
+	spiPtr->CR1 &= ~(SPI_CR1_SPE);
+
 	// set baud rate
 	if ( baudRate == SPI_BAUD_RATE::SYSCLK_DIV_BY_2 )
 	{
@@ -496,4 +499,7 @@ void LLPD::spi_master_change_baud_rate (const SPI_NUM& spiNum, const SPI_BAUD_RA
 		spiPtr->CFG1 |= SPI_CFG1_MBR_1;
 		spiPtr->CFG1 |= SPI_CFG1_MBR_2;
 	}
+
+	// lastly, enable SPI peripheral
+	spiPtr->CR1 |= SPI_CR1_SPE;
 }

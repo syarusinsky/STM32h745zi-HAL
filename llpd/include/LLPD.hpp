@@ -230,6 +230,7 @@ class LLPD
 		static void rcc_clock_start_max_cpu1 (const unsigned int pll1qPresc = 8); 	// starts M7 core at 480 MHz using PLL and LDO
 												// (needs to be used with below function)
 		static void rcc_clock_start_max_cpu2(); // starts M4 core at 240 MHx using PLL and LDO (needs to be used with above function)
+		static void rcc_start_pll2 (const unsigned int pll2qPresc = 20); // starts the second PLL
 
 		// GPIO
 		static void gpio_enable_clock (const GPIO_PORT& port);
