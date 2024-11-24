@@ -31,6 +31,12 @@ void LLPD::tim6_counter_setup (uint32_t prescalerDivisor, uint32_t cyclesPerInte
 
 	// send an update event to apply the settings
 	TIM6->EGR |= TIM_EGR_UG;
+
+	// set master mode to update
+	TIM6->CR2 = TIM_CR2_MMS_1;
+
+	// clear update status
+	TIM6->SR = 0;
 }
 
 void LLPD::tim6_counter_enable_interrupts()

@@ -256,8 +256,9 @@ class LLPD
 		static uint16_t adc_get_channel_value (const ADC_NUM& adcNum, const ADC_CHANNEL& adcChannel);
 
 		// DAC dac1( vout1 = a4, vout2 = a5 )
-		static void dac_init (bool useVoltageBuffer);
-		static void dac_send (uint16_t ch1Data, uint16_t ch2Data);
+		static void dac_init (bool useVoltageBuffer); // not using dma
+		static void dac_init_use_dma (bool useVoltageBuffer);
+		static void dac_send (uint16_t ch1Data, uint16_t ch2Data); // only for use if not using DMA
 
 		// TIM6
 		// tim6 stores 3 internal variables for delay functions across cores in D3 sram, so if you plan on using that account
