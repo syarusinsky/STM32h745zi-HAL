@@ -257,7 +257,7 @@ class LLPD
 
 		// DAC dac1( vout1 = a4, vout2 = a5 )
 		static void dac_init (bool useVoltageBuffer); // not using dma
-		static void dac_init_use_dma (bool useVoltageBuffer);
+		static void dac_init_use_dma (bool useVoltageBuffer, uint32_t* buffer1, uint32_t* buffer2, unsigned int numSamplesPerBuf); // can't use DTCM memory for buffers
 		static void dac_send (uint16_t ch1Data, uint16_t ch2Data); // only for use if not using DMA
 
 		// TIM6

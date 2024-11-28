@@ -569,8 +569,8 @@ void LLPD::adc_set_channel_order (const ADC_NUM& adcNum, uint8_t numChannels, co
 		// configure the number of data to be transferred
 		DMA1_Stream0->NDTR = numChannels;
 
-		// configure stream priority to very high
-		DMA1_Stream0->CR |= DMA_SxCR_PL;
+		// configure stream priority to low
+		DMA1_Stream0->CR &= ~(DMA_SxCR_PL);
 
 		// set data transfer direction from peripheral to memory
 		DMA1_Stream0->CR &= ~(DMA_SxCR_DIR);
