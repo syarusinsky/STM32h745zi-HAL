@@ -124,3 +124,8 @@ void LLPD::dac_send (uint16_t ch1Data, uint16_t ch2Data)
 	// put data in data registers and ensure only 12 bits are used
 	DAC1->DHR12RD = ( (ch1Data & 0b0000111111111111) | ((ch2Data & 0b0000111111111111) << 16) );
 }
+
+bool LLPD::dac_dma_using_buffer1()
+{
+	return DMA1_Stream1->CR & DMA_SxCR_CT;
+}
