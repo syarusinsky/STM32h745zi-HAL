@@ -219,7 +219,7 @@ enum class OPAMP_NUM
 	OPAMP_2
 };
 
-constexpr unsigned int D3_SRAM_TIM6_OFFSET_IN_BYTES = sizeof(float) * 3;
+constexpr unsigned int D3_SRAM_TIM6_OFFSET_IN_BYTES = sizeof(float) * 3 + sizeof(uint32_t);
 constexpr unsigned int D3_SRAM_ADC_OFFSET_IN_BYTES = D3_SRAM_TIM6_OFFSET_IN_BYTES + ( sizeof(uint32_t) * 32 ) + ( sizeof(ADC_CHANNEL) * 32 );
 constexpr unsigned int D3_SRAM_UNUSED_OFFSET_IN_BYTES = D3_SRAM_TIM6_OFFSET_IN_BYTES + D3_SRAM_ADC_OFFSET_IN_BYTES;
 
@@ -260,6 +260,7 @@ class LLPD
 		static void dac_init_use_dma (bool useVoltageBuffer, uint32_t* buffer1, uint32_t* buffer2, unsigned int numSamplesPerBuf); // can't use DTCM memory for buffers
 		static void dac_send (uint16_t ch1Data, uint16_t ch2Data); // only for use if not using DMA
 		static bool dac_dma_using_buffer1();
+		static void dac_dma_stop();
 
 		// TIM6
 		// tim6 stores 3 internal variables for delay functions across cores in D3 sram, so if you plan on using that account

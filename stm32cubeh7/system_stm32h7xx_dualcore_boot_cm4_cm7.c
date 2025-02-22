@@ -257,6 +257,8 @@ void SystemInit (void)
 
 }
 
+extern void Custom_Reset_Handler();
+
 /**
    * @brief  Update SystemCoreClock variable according to Clock Register Values.
   *         The SystemCoreClock variable contains the core clock , it can
@@ -296,6 +298,8 @@ void SystemInit (void)
   */
 void SystemCoreClockUpdate (void)
 {
+  Custom_Reset_Handler();
+
   uint32_t pllp, pllsource, pllm, pllfracen, hsivalue, tmp;
   uint32_t common_system_clock;
   float_t fracn1, pllvco;

@@ -61,6 +61,9 @@ void LLPD::dac_init_use_dma (bool useVoltageBuffer, uint32_t* buffer1, uint32_t*
 	// set peripheral address for stream
 	DMA1_Stream1->PAR = (uint64_t) &(DAC1->DHR12RD);
 
+	// set the stream to handle bufferable transfers
+	DMA1_Stream1->CR |= DMA_SxCR_TRBUFF;
+
 	// set double buffer mode and circular mode
 	DMA1_Stream1->CR |= DMA_SxCR_DBM;
 	DMA1_Stream1->CR |= DMA_SxCR_CIRC;
@@ -128,4 +131,11 @@ void LLPD::dac_send (uint16_t ch1Data, uint16_t ch2Data)
 bool LLPD::dac_dma_using_buffer1()
 {
 	return DMA1_Stream1->CR & DMA_SxCR_CT;
+}
+
+void LLPD::dac_dma_stop()
+{
+	// ensure dma stream is disabled and control register is reset
+	DMA1_Stream1->CR = 0;
+	while ( DMA1_Stream1->CR & DMA_SxCR_EN ) {}
 }

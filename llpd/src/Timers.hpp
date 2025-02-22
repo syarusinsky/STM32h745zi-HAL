@@ -2,19 +2,19 @@
 
 #include <limits>
 
-static volatile bool     tim6InterruptsEnabled = false;
-static volatile float*   tim6DelayVal = (float*) D3_SRAM_BASE; // value for delay functions
-static volatile uint32_t tim6InterruptRate = 0; 	// interrupt rate used for delay functions
-static volatile uint32_t tim6CyclesPerInterrupt = 0;
-static volatile float*   tim6USecondMax = tim6DelayVal + 1; 	// when tim6USecondIncr reaches this value, the delay is over
-static volatile float*   tim6USecondIncr = tim6USecondMax + 1;	// how much to increment per interrupt for microsecond delay
+static volatile bool      tim6InterruptsEnabled = false;
+static volatile float*    tim6DelayVal = (float*) D3_SRAM_BASE; // value for delay functions
+static volatile uint32_t  tim6InterruptRate = 0; 	// interrupt rate used for delay functions
+static volatile float*    tim6USecondMax = tim6DelayVal + 1; 	// when tim6USecondIncr reaches this value, the delay is over
+static volatile float*    tim6USecondIncr = tim6USecondMax + 1;	// how much to increment per interrupt for microsecond delay
+static volatile uint32_t* tim6CyclesPerInterrupt = reinterpret_cast<volatile uint32_t*>( tim6USecondIncr + 1 );
 
 void LLPD::tim6_counter_setup (uint32_t prescalerDivisor, uint32_t cyclesPerInterrupt, uint32_t interruptRate)
 {
 	*tim6DelayVal = std::numeric_limits<float>::max();
 
 	// store sample rate for delay functions
-	tim6CyclesPerInterrupt = cyclesPerInterrupt;
+	*tim6CyclesPerInterrupt = cyclesPerInterrupt;
 	tim6InterruptRate = interruptRate;
 	*tim6USecondIncr = 1000000.0f / tim6InterruptRate;
 
@@ -30,7 +30,7 @@ void LLPD::tim6_counter_setup (uint32_t prescalerDivisor, uint32_t cyclesPerInte
 
 	// set timer prescaler and auto-reload values
 	TIM6->PSC = prescalerDivisor;
-	TIM6->ARR = tim6CyclesPerInterrupt;
+	TIM6->ARR = *tim6CyclesPerInterrupt;
 
 	// send an update event to apply the settings
 	TIM6->EGR |= TIM_EGR_UG;
@@ -95,7 +95,7 @@ void LLPD::tim6_delay (uint32_t microseconds)
 	{
 		volatile uint32_t accumulatedVal = 0;
 		volatile uint32_t currentVal = TIM6->CNT & 0b1111111111111111;
-		while ( ((accumulatedVal / tim6CyclesPerInterrupt) * *tim6USecondIncr) < microseconds )
+		while ( ((accumulatedVal / *tim6CyclesPerInterrupt) * *tim6USecondIncr) < microseconds )
 		{
 			volatile uint32_t newVal = TIM6->CNT & 0b1111111111111111;
 			if ( newVal > currentVal )
@@ -104,7 +104,7 @@ void LLPD::tim6_delay (uint32_t microseconds)
 			}
 			else
 			{
-				accumulatedVal += ( (tim6CyclesPerInterrupt - currentVal) + newVal );
+				accumulatedVal += ( (*tim6CyclesPerInterrupt - currentVal) + newVal );
 			}
 
 			currentVal = newVal;
