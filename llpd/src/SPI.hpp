@@ -29,7 +29,7 @@ static void setup_spi_registers (SPI_TypeDef* spiPtr, const SPI_BAUD_RATE& baudR
 		}
 		else if ( spiPtr == SPI6 )
 		{
-			RCC->APB2ENR |= RCC_APB4ENR_SPI6EN;
+			RCC->APB4ENR |= RCC_APB4ENR_SPI6EN;
 		}
 
 		// ensure spi is off
@@ -141,6 +141,16 @@ static void setup_spi_registers (SPI_TypeDef* spiPtr, const SPI_BAUD_RATE& baudR
 		{
 			spiPtr->CFG2 &= ~(SPI_CFG2_COMM);
 		}
+		else if ( duplex == SPI_DUPLEX::SIMPLEX_TX )
+		{
+			spiPtr->CFG2 &= ~(SPI_CFG2_COMM);
+			spiPtr->CFG2 |= SPI_CFG2_COMM_0;
+		}
+		else if ( duplex == SPI_DUPLEX::SIMPLEX_RX )
+		{
+			spiPtr->CFG2 &= ~(SPI_CFG2_COMM);
+			spiPtr->CFG2 |= SPI_CFG2_COMM_1;
+		}
 		else if ( duplex == SPI_DUPLEX::HALF )
 		{
 			spiPtr->CFG2 |= SPI_CFG2_COMM;
@@ -213,6 +223,70 @@ static void setup_spi_registers (SPI_TypeDef* spiPtr, const SPI_BAUD_RATE& baudR
 				break;
 			case SPI_DATA_SIZE::BITS_16:
 				dataSizeBits = 16;
+
+				break;
+			case SPI_DATA_SIZE::BITS_17:
+				dataSizeBits = 17;
+
+				break;
+			case SPI_DATA_SIZE::BITS_18:
+				dataSizeBits = 18;
+
+				break;
+			case SPI_DATA_SIZE::BITS_19:
+				dataSizeBits = 19;
+
+				break;
+			case SPI_DATA_SIZE::BITS_20:
+				dataSizeBits = 20;
+
+				break;
+			case SPI_DATA_SIZE::BITS_21:
+				dataSizeBits = 21;
+
+				break;
+			case SPI_DATA_SIZE::BITS_22:
+				dataSizeBits = 22;
+
+				break;
+			case SPI_DATA_SIZE::BITS_23:
+				dataSizeBits = 23;
+
+				break;
+			case SPI_DATA_SIZE::BITS_24:
+				dataSizeBits = 24;
+
+				break;
+			case SPI_DATA_SIZE::BITS_25:
+				dataSizeBits = 25;
+
+				break;
+			case SPI_DATA_SIZE::BITS_26:
+				dataSizeBits = 26;
+
+				break;
+			case SPI_DATA_SIZE::BITS_27:
+				dataSizeBits = 27;
+
+				break;
+			case SPI_DATA_SIZE::BITS_28:
+				dataSizeBits = 28;
+
+				break;
+			case SPI_DATA_SIZE::BITS_29:
+				dataSizeBits = 29;
+
+				break;
+			case SPI_DATA_SIZE::BITS_30:
+				dataSizeBits = 30;
+
+				break;
+			case SPI_DATA_SIZE::BITS_31:
+				dataSizeBits = 31;
+
+				break;
+			case SPI_DATA_SIZE::BITS_32:
+				dataSizeBits = 32;
 
 				break;
 		}
@@ -502,4 +576,80 @@ void LLPD::spi_master_change_baud_rate (const SPI_NUM& spiNum, const SPI_BAUD_RA
 
 	// lastly, enable SPI peripheral
 	spiPtr->CR1 |= SPI_CR1_SPE;
+}
+
+void LLPD::spi6_master_tx_dma_enable (const unsigned int bufferSize, const uint16_t* buffer1, const uint16_t* buffer2)
+{
+	// enable syscfg clock for DMA
+	RCC->APB4ENR |= RCC_APB4ENR_SYSCFGEN;
+
+	// enable dma1 clock
+	RCC->AHB1ENR |= RCC_AHB1ENR_DMA1EN;
+
+	// ensure dma stream is disabled and control register is reset
+	DMA1_Stream2->CR = 0;
+	while ( DMA1_Stream2->CR & DMA_SxCR_EN ) {}
+
+	// set peripheral address for stream
+	DMA1_Stream2->PAR = (uint64_t) ((uint16_t*)&(SPI6->TXDR));
+
+	// set the stream to handle bufferable transfers
+	DMA1_Stream2->CR |= DMA_SxCR_TRBUFF;
+
+	// set double buffer mode and circular mode
+	DMA1_Stream2->CR |= DMA_SxCR_DBM;
+	DMA1_Stream2->CR |= DMA_SxCR_CIRC;
+
+	// set data size to 16 bits
+	DMA1_Stream2->CR &= ~(DMA_SxCR_PSIZE);
+	DMA1_Stream2->CR |= DMA_SxCR_PSIZE_0;
+	DMA1_Stream2->CR &= ~(DMA_SxCR_MSIZE);
+	DMA1_Stream2->CR |= DMA_SxCR_MSIZE_0;
+
+	// set memory increment mode for memory region
+	DMA1_Stream2->CR |= DMA_SxCR_MINC;
+
+	// set the memory addresses for where the dac data will be coming from
+	DMA1_Stream2->M0AR = (uint64_t) buffer1;
+	DMA1_Stream2->M1AR = (uint64_t) buffer2;
+
+	// configure the number of data to be transferred
+	DMA1_Stream2->NDTR = bufferSize;
+
+	// set data transfer direction from memory to peripheral
+	DMA1_Stream2->CR &= ~(DMA_SxCR_DIR);
+	DMA1_Stream2->CR |= DMA_SxCR_DIR_0;
+
+	// configure stream priority to very high
+	DMA1_Stream2->CR |= DMA_SxCR_PL;
+
+	// set up dma request input
+	DMAMUX1_Channel2->CCR = 67; 	// 67 is the dma request mux input for dac_ch1_dma
+
+	// set direct mode
+	DMA1_Stream2->FCR &= ~(DMA_SxFCR_DMDIS);
+
+	// clear flags before enabling
+	DMA1->LIFCR |= DMA_LIFCR_CFEIF2 | DMA_LIFCR_CDMEIF2 | DMA_LIFCR_CTEIF2 | DMA_LIFCR_CHTIF2 | DMA_LIFCR_CTCIF2;
+
+	// start the transfer
+	SPI6->CR1 |= SPI_CR1_CSTART;
+
+	// spinlock until ready to send
+	while ( !(SPI6->SR & SPI_SR_TXP) ){}
+
+	// enable stream
+	DMA1_Stream2->CR |= DMA_SxCR_EN;
+}
+
+void LLPD::spi6_master_tx_dma_stop()
+{
+	// ensure dma stream is disabled and control register is reset
+	DMA1_Stream2->CR = 0;
+	while ( DMA1_Stream2->CR & DMA_SxCR_EN ) {}
+}
+
+bool LLPD::spi6_master_tx_dma_using_buffer1()
+{
+	return DMA1_Stream2->CR & DMA_SxCR_CT;
 }

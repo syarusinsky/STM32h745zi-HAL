@@ -138,6 +138,8 @@ enum class SPI_CLK_PHASE
 enum class SPI_DUPLEX
 {
 	FULL,
+	SIMPLEX_TX,
+	SIMPLEX_RX,
 	HALF
 };
 
@@ -161,7 +163,23 @@ enum class SPI_DATA_SIZE
 	BITS_13,
 	BITS_14,
 	BITS_15,
-	BITS_16
+	BITS_16,
+	BITS_17,
+	BITS_18,
+	BITS_19,
+	BITS_20,
+	BITS_21,
+	BITS_22,
+	BITS_23,
+	BITS_24,
+	BITS_25,
+	BITS_26,
+	BITS_27,
+	BITS_28,
+	BITS_29,
+	BITS_30,
+	BITS_31,
+	BITS_32
 };
 
 enum class I2C_NUM
@@ -287,6 +305,10 @@ class LLPD
 						const SPI_FRAME_FORMAT& frameFormat, const SPI_DATA_SIZE& dataSize);
 		static void spi_master_change_baud_rate (const SPI_NUM& spiNum, const SPI_BAUD_RATE& baudRate);
 		static uint16_t spi_master_send_and_recieve (const SPI_NUM& spiNum, uint8_t data);
+		static void spi6_master_tx_dma_enable (const unsigned int bufferSize, const uint16_t* buffer1,
+							const uint16_t* buffer2); // actually triggered on dac_ch1_dma
+		static void spi6_master_tx_dma_stop();
+		static bool spi6_master_tx_dma_using_buffer1();
 
 		// I2C i2c1( sda = b7,  scl = b6  )
 		//     i2c2( sda = b11, scl = b10 )

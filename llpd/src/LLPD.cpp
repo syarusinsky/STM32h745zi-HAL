@@ -39,4 +39,5 @@ extern "C" void Custom_Reset_Handler(void)
 {
 	// dma may still be running from the last reset
 	LLPD::dac_dma_stop();
+	LLPD::spi6_master_tx_dma_stop();
 }
