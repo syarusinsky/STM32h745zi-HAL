@@ -624,7 +624,7 @@ void LLPD::spi6_master_tx_dma_enable (const unsigned int bufferSize, const uint1
 	DMA1_Stream2->CR |= DMA_SxCR_PL;
 
 	// set up dma request input
-	DMAMUX1_Channel2->CCR = 67; 	// 67 is the dma request mux input for dac_ch1_dma
+	DMAMUX1_Channel2->CCR = 69; 	// 69 is the dma request mux input for TIM6UP
 
 	// set direct mode
 	DMA1_Stream2->FCR &= ~(DMA_SxFCR_DMDIS);

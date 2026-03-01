@@ -35,6 +35,12 @@ void LLPD::tim6_counter_setup (uint32_t prescalerDivisor, uint32_t cyclesPerInte
 	// send an update event to apply the settings
 	TIM6->EGR |= TIM_EGR_UG;
 
+	// only allow the counter overflow/underflow to generate update events
+	TIM6->CR1 |= TIM_CR1_URS;
+
+	// allow timer to generate update events
+	TIM6->DIER |= TIM_DIER_UDE;
+
 	// set master mode to update
 	TIM6->CR2 = TIM_CR2_MMS_1;
 
