@@ -237,7 +237,7 @@ enum class OPAMP_NUM
 	OPAMP_2
 };
 
-constexpr unsigned int D3_SRAM_TIM6_OFFSET_IN_BYTES = sizeof(float) * 3 + sizeof(uint32_t);
+constexpr unsigned int D3_SRAM_TIM6_OFFSET_IN_BYTES = sizeof(float) * 4 + sizeof(uint32_t);
 constexpr unsigned int D3_SRAM_ADC_OFFSET_IN_BYTES = D3_SRAM_TIM6_OFFSET_IN_BYTES + ( sizeof(uint32_t) * 32 ) + ( sizeof(ADC_CHANNEL) * 32 );
 constexpr unsigned int D3_SRAM_UNUSED_OFFSET_IN_BYTES = D3_SRAM_TIM6_OFFSET_IN_BYTES + D3_SRAM_ADC_OFFSET_IN_BYTES;
 
@@ -292,6 +292,7 @@ class LLPD
 		static void tim6_delay (uint32_t microseconds); // delay function may not be 100% accurate
 		static bool tim6_isr_handle_delay(); 	// To use delay functions, this function needs to be in the tim6 isr.
 							// It will return true if a delay is not finished, or false if it is.
+		static unsigned int tim6_get_elapsed_microseconds();
 
 		// SPI spi1( sck =  a5, miso =  a6, mosi =  a7 )
 		//     spi2( sck = b13, miso = b14, mosi = b15 )
@@ -309,6 +310,9 @@ class LLPD
 							const uint16_t* buffer2); // actually triggered on dac_ch1_dma
 		static void spi6_master_tx_dma_stop();
 		static bool spi6_master_tx_dma_using_buffer1();
+		// TODO this is stubbed out right now, but in the future I need to fix the problem in devlib
+		static bool spi2_dma_start (uint8_t* txBuffer, uint8_t* rxBuffer,
+						unsigned int bufferSize) { return false; } // returns false if failed
 
 		// I2C i2c1( sda = b7,  scl = b6  )
 		//     i2c2( sda = b11, scl = b10 )

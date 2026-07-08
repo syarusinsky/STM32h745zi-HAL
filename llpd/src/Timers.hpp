@@ -7,7 +7,8 @@ static volatile float*    tim6DelayVal = (float*) D3_SRAM_BASE; // value for del
 static volatile uint32_t  tim6InterruptRate = 0; 	// interrupt rate used for delay functions
 static volatile float*    tim6USecondMax = tim6DelayVal + 1; 	// when tim6USecondIncr reaches this value, the delay is over
 static volatile float*    tim6USecondIncr = tim6USecondMax + 1;	// how much to increment per interrupt for microsecond delay
-static volatile uint32_t* tim6CyclesPerInterrupt = reinterpret_cast<volatile uint32_t*>( tim6USecondIncr + 1 );
+static volatile float*    tim6USecPerTick = tim6USecondIncr + 1; // how many microseconds pass per counter increment
+static volatile uint32_t* tim6CyclesPerInterrupt = reinterpret_cast<volatile uint32_t*>( tim6USecPerTick + 1 );
 
 void LLPD::tim6_counter_setup (uint32_t prescalerDivisor, uint32_t cyclesPerInterrupt, uint32_t interruptRate)
 {
@@ -17,6 +18,7 @@ void LLPD::tim6_counter_setup (uint32_t prescalerDivisor, uint32_t cyclesPerInte
 	*tim6CyclesPerInterrupt = cyclesPerInterrupt;
 	tim6InterruptRate = interruptRate;
 	*tim6USecondIncr = 1000000.0f / tim6InterruptRate;
+	*tim6USecPerTick = *tim6USecondIncr / static_cast<float>( cyclesPerInterrupt );
 
 	// make sure timer is disabled during setup
 	TIM6->CR1 &= ~(TIM_CR1_CEN);
@@ -128,4 +130,25 @@ bool LLPD::tim6_isr_handle_delay()
 	}
 
 	return false;
+}
+
+unsigned int LLPD::tim6_get_elapsed_microseconds()
+{
+	static unsigned int prevCnt = 0;
+	const unsigned int currentCnt = TIM6->CNT;
+	unsigned int elapsedTicks = 0;
+
+	if ( currentCnt >= prevCnt )
+	{
+		elapsedTicks = currentCnt - prevCnt;
+	}
+	else
+	{
+		// counter overflowed
+		elapsedTicks = ( TIM6->ARR - prevCnt ) + currentCnt;
+	}
+
+	prevCnt = currentCnt;
+
+	return static_cast<float>( elapsedTicks ) * *tim6USecPerTick;
 }
