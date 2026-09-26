@@ -115,11 +115,11 @@ void LLPD::i2c_master_setup (const I2C_NUM& i2cNum, uint32_t timingRegVal)
 
 	// i2c scl
 	LLPD::gpio_output_setup( gpioPortScl, sclPin, GPIO_PUPD::NONE, GPIO_OUTPUT_TYPE::OPEN_DRAIN,
-					GPIO_OUTPUT_SPEED::HIGH, true );
+					GPIO_OUTPUT_SPEED::LOW, true );
 
 	// i2c sda
 	LLPD::gpio_output_setup( gpioPortSda, sdaPin, GPIO_PUPD::NONE, GPIO_OUTPUT_TYPE::OPEN_DRAIN,
-					GPIO_OUTPUT_SPEED::HIGH, true );
+					GPIO_OUTPUT_SPEED::LOW, true );
 
 	// enable i2c peripheral clock
 	if ( i2cNum == I2C_NUM::I2C_4 )

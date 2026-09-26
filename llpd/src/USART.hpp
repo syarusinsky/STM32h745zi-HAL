@@ -28,7 +28,7 @@ void LLPD::usart_init (const USART_NUM& usartNum, const USART_WORD_LENGTH& wordL
 
 		// tx
 		gpio_output_setup( GPIO_PORT::B, GPIO_PIN::PIN_6, GPIO_PUPD::PULL_DOWN, GPIO_OUTPUT_TYPE::PUSH_PULL,
-					GPIO_OUTPUT_SPEED::HIGH, true );
+					GPIO_OUTPUT_SPEED::LOW, true );
 		gpio_output_set( GPIO_PORT::B, GPIO_PIN::PIN_6, false );
 
 		// rx
@@ -49,7 +49,7 @@ void LLPD::usart_init (const USART_NUM& usartNum, const USART_WORD_LENGTH& wordL
 
 		// tx
 		gpio_output_setup( GPIO_PORT::D, GPIO_PIN::PIN_5, GPIO_PUPD::PULL_DOWN, GPIO_OUTPUT_TYPE::PUSH_PULL,
-					GPIO_OUTPUT_SPEED::HIGH, true );
+					GPIO_OUTPUT_SPEED::LOW, true );
 		gpio_output_set( GPIO_PORT::D, GPIO_PIN::PIN_5, false );
 
 		// rx
@@ -70,7 +70,7 @@ void LLPD::usart_init (const USART_NUM& usartNum, const USART_WORD_LENGTH& wordL
 
 		// tx
 		gpio_output_setup( GPIO_PORT::C, GPIO_PIN::PIN_10, GPIO_PUPD::PULL_DOWN, GPIO_OUTPUT_TYPE::PUSH_PULL,
-					GPIO_OUTPUT_SPEED::HIGH, true );
+					GPIO_OUTPUT_SPEED::LOW, true );
 		gpio_output_set( GPIO_PORT::C, GPIO_PIN::PIN_10, false );
 
 		// rx
@@ -91,7 +91,7 @@ void LLPD::usart_init (const USART_NUM& usartNum, const USART_WORD_LENGTH& wordL
 
 		// tx
 		gpio_output_setup( GPIO_PORT::C, GPIO_PIN::PIN_6, GPIO_PUPD::PULL_DOWN, GPIO_OUTPUT_TYPE::PUSH_PULL,
-					GPIO_OUTPUT_SPEED::HIGH, true );
+					GPIO_OUTPUT_SPEED::LOW, true );
 		gpio_output_set( GPIO_PORT::C, GPIO_PIN::PIN_6, false );
 
 		// rx
